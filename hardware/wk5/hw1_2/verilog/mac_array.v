@@ -56,7 +56,7 @@ module mac_array (clk, reset, out_s, in_w, in_n, inst_w, valid);
       //instruction SR handling
       inst_w_temp[1:0] <= inst_w;
       for (j=1; j < row; j +=1) begin // inst_w flows to row0 to row7
-        inst_w_temp[2*i+1:2*i] <= inst_w_temp[2*(i-1)+1:2*(i-1)];
+        inst_w_temp[2*j+1:2*j] <= inst_w_temp[2*(j-1)+1:2*(j-1)];
       end
     end
    
