@@ -40,30 +40,17 @@ module mac_array (clk, reset, out_s, in_w, in_n, inst_w, valid);
   //now we can assign out_s
   assign out_s = temp[psum_bw*(row+1)*col-1: psum_bw*row*col];
 
-  /*
-  input  clk, reset;
-  output [psum_bw*col-1:0] out_s;
-  output [col-1:0] valid;
-  input  [bw-1:0] in_w; // inst[1]:execute, inst[0]: kernel loading
-  input  [1:0] inst_w;
-  input  [psum_bw*col-1:0] in_n;
-  */
-  genvar j;
-  generate
-    for (j=1; j < row; j +=1) begin 
-      always @ (posedge clk) begin
-        if (reset) begin
-          inst_w_temp[2*row-1:0] <= 0;
-        end else begin
-          //instruction SR handling
-          inst_w_temp[1:0] <= inst_w;
-          // inst_w flows to row0 to row7
-          inst_w_temp[2*j+1:2*j] <= inst_w_temp[2*(j-1)+1:2*(j-1)];
-          
-        end
-      end
+  always @ (posedge clk) begin
+    if (reset) begin
+      inst_w_temp[2*row-1:0] <= 0;
+    end else begin
+      //instruction SR handling
+      inst_w_temp[1:0] <= inst_w;
+      // inst_w flows to row0 to row7
+      inst_w_temp[2*row-1:2] <= inst_w_temp[2*(row-1)-1:0];
+      
     end
-  endgenerate
+  end
 
 
 
