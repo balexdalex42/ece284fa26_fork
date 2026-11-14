@@ -48,14 +48,14 @@ module mac_array (clk, reset, out_s, in_w, in_n, inst_w, valid);
   input  [1:0] inst_w;
   input  [psum_bw*col-1:0] in_n;
   */
-  integer i;
+  integer j;
   always @ (posedge clk) begin
     if (reset) begin
       inst_w_temp[2*row-1:0] <= 0;
     end else begin
       //instruction SR handling
       inst_w_temp[1:0] <= inst_w;
-      for (i=1; i < row; i +=1) begin // inst_w flows to row0 to row7
+      for (j=1; j < row; j +=1) begin // inst_w flows to row0 to row7
         inst_w_temp[2*i+1:2*i] <= inst_w_temp[2*(i-1)+1:2*(i-1)];
       end
     end
