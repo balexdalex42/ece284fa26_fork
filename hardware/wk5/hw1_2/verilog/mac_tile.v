@@ -29,11 +29,9 @@ mac #(.bw(bw), .psum_bw(psum_bw)) mac_instance (
 ); 
 
 //comb
-always @(*) begin
-        out_e = a_q;
-        inst_e = inst_q;
-        out_s = mac_out;
-end
+assign out_e = a_q;
+assign inst_e = inst_q;
+assign out_s = mac_out;
 //sequential
 always @(posedge clk) begin
         if (reset) begin
