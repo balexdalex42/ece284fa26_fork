@@ -48,7 +48,7 @@ module mac_array (clk, reset, out_s, in_w, in_n, inst_w, valid);
   input  [1:0] inst_w;
   input  [psum_bw*col-1:0] in_n;
   */
-  integer j;
+  genvar j;
   always @ (posedge clk) begin
     if (reset) begin
       inst_w_temp[2*row-1:0] <= 0;
