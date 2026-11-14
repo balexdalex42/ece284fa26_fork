@@ -14,8 +14,12 @@ input  [psum_bw-1:0] in_n;
 input  clk;
 input  reset;
 
-...
-...
+//internal regs
+reg [1:0] inst_q;
+reg [bw-1:0] a_q, b_q, load_ready_q; //a->act, b->weight
+reg [psum_bw-1:0] c_q;
+wire [psum_bw-1:0] mac_out;
+
 
 mac #(.bw(bw), .psum_bw(psum_bw)) mac_instance (
         .a(a_q), 
@@ -24,7 +28,32 @@ mac #(.bw(bw), .psum_bw(psum_bw)) mac_instance (
 	.out(mac_out)
 ); 
 
-...
-...
+//comb
+always @(*) begin
+        out_e = a_q;
+        inst_e = inst_q;
+        out_s = mac_out;
+end
+//sequential
+always @(posedge clk) begin
+        if (reset) begin
+                inst_q <= 0;
+                a_q <= 0;
+                b_q <= 0;
+                load_ready_q <= 1;
+                c_q <= 0;
+        end else begin
+                inst_q[1] <= inst_w[1];
+                if (|inst_q)
+                        a_q <= in_w;
+                if (inst_q[0] & load_ready_q) begin
+                        b_q <= in_w;
+                        load_ready_q <= 0;
+                end
+                if (~load_ready_q) 
+                        inst_q[0] <= inst_w[0];
+                c_q <= in_n;
+        end
+end
 
 endmodule
